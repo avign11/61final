@@ -1,0 +1,123 @@
+//Nanette Avignone CST112
+//Project 5 
+
+float x, y;                  
+float sidewalk;
+int spacing=60;
+int many=8;
+
+String title= "Project 5";
+String subtitle1= "Press 't' key to move tallest to the end.";
+String subtitle2= "Press 'w' key to move widest to the end";
+String subtitle3= "Press 'r' key to reset.";
+String subtitle4= "Press 'q' key to quit.";
+String author=  "Nanette Avignone, CST112";
+
+
+// ARRAY OF PERSONS//
+
+Person [] people = new Person [many];
+//SETUP: define screen size//
+void setup() {
+  size (900, 700 );
+  x = 0;
+  y = 0;   
+  sidewalk = height/1.5;  
+  reset();
+}
+void reset() {
+     for (int i=0; i<many; i++){
+       people[i]=new Person ();
+     }
+}
+
+
+//DRAW: sky, ground, house, tree, sun//
+void draw() {
+  background (135, 206, 250);          //sky
+  scene();
+  message();
+  // Show all people.
+  x=100;
+  y=sidewalk;
+  for (int i=0; i<many; i++) {
+    people[i].show( x, y );
+    x=  x + 80;
+  }
+} 
+
+//SCENE:
+void scene() {           
+
+  fill (192, 192, 192 );
+  rect ( 0, sidewalk, width, height-sidewalk );    //gray ground
+  stroke (255, 255, 255);
+  fill (255, 255, 255);
+  while (x <= width) {
+    ellipse  ( x-100, y-200, 50, 30);        //cloud    
+    x = x + spacing;
+  }
+}
+
+
+//MESSAGES: title and author 
+void message() {  
+  fill (0);
+  textSize(20);
+  text (title, width/3, 20 );
+  textSize(12);
+  text (subtitle1, width/3, 35 );
+  text (subtitle2, width/3, 55 );
+  text (subtitle3, width/3, 75 );
+  text (subtitle4, width/3, 95 );  
+  //text (author, 10, height -10 );
+}
+
+//// EVENT HANDLERS
+void keyPressed() {
+  if (key == 'q') exit();
+  if (key == 'r') reset();
+  if (key == 't') tall( people, many );
+}
+void tall( Person[] p, int m ) {
+    //// Move tallest to end.
+    int k=0;
+    // Find tallest
+    for( int j=1; j<many; j++ ) {
+      if (p[j].tall > p[k].tall) {
+        k=j;
+      }
+    }  
+    // Move it to end (swap).
+    Person save;
+    save=  p[m-1];
+    p[m-1]=  p[k];
+    p[k]=  save;
+}
+
+
+
+//CLASS DEFINITIONS///
+
+class Person {
+  
+  float r=255, g=0, b=0;  
+  int tall= int( random( 90, 150 ) );
+  int wide= int( random( 15, 70 ) );
+  
+  // CONSTRUCTOR
+  Person() {
+    r=  random( 255 );
+    g=  random( 255 );
+    b=  random( 255 );
+  }
+
+  //Display People
+  void show( float x, float y ) { 
+    stroke ( 0, 0, 0 );
+    fill ( r, g, b );  
+    rect ( x, y, wide,-tall );
+    float hh=tall/3;
+    ellipse( x+wide/2, y-tall-hh/3, hh,hh*3/4 );
+  }
+}
